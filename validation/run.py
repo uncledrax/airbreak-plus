@@ -177,7 +177,14 @@ def main() -> int:
     (out / "report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     write_html(report, out / "report.html")
     print("AirBreak offline status:", report["offline_status"])
-    print("Open source/configuration findings:", len(findings))
+    print("Open engineering findings:", len(findings))
+    for item in findings:
+        print("FINDING|{id}|{severity}|{classification}|{description}".format(**item))
+    for item in commands:
+        cases = [line for line in item["stdout"].splitlines() if line.startswith("CASE|")]
+        if cases:
+            print("CASES|{}|{}".format(item["name"], " ".join(
+                line.split("|")[1] + ":" + line.split("|")[2] for line in cases)))
     print("Patient-use safety status: NOT VALIDATED")
     print("Report:", out / "report.html")
     return 0 if report["offline_status"] == "PASS" else 1
