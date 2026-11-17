@@ -25,6 +25,7 @@ class SourceAuditTests(unittest.TestCase):
                 "CONFIRMED_CONFIGURATION", "SOURCE_DEFECT_INDICATOR",
                 "PROPOSED_REQUIREMENT_CONFLICT", "AUDIT_INCOMPLETE",
                 "EQUIVALENCE_UNPROVEN",
+                "DOCUMENTATION_MISMATCH",
             })
 
 class SyntheticSignalTests(unittest.TestCase):
