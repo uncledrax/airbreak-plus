@@ -79,4 +79,10 @@ def audit() -> list[dict]:
         findings.append(finding("AB-AUD-09", "REVIEW", "EQUIVALENCE_UNPROVEN",
                                 "AutoEPAP replaces stock callbacks; Off-state timing equivalence untested",
                                 "patches/autoepap/shared.c"))
+    doc = (ROOT / "docs/guide/patching.md").read_text(encoding="utf-8")
+    if defaults.get("patch-learn-targets") is True and re.search(
+            r"Learn Targets[^\\n]*Off by default", doc):
+        findings.append(finding("AB-AUD-10", "MEDIUM", "DOCUMENTATION_MISMATCH",
+                                "Patch-option registry enables Learn Targets by default, but guide says Off by default",
+                                "python/lib/as10_patch_options.py; docs/guide/patching.md"))
     return findings

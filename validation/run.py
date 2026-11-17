@@ -54,6 +54,30 @@ def native_test(build_dir: Path, no_menu: bool, sanitizers: bool) -> list[dict]:
         results.append(run)
     return results
 
+def autoepap_kernel_test(build_dir: Path, sanitizers: bool) -> list[dict]:
+    """Compile the real numerical kernel with dead-stripped firmware-only functions."""
+    build_dir.mkdir(parents=True, exist_ok=True)
+    target = build_dir / "autoepap_core"
+    cmd = ["gcc", "-std=c11", "-O1", "-g", "-Wall", "-Wextra", "-Werror",
+           "-Wno-unused-const-variable", "-ffunction-sections", "-fdata-sections",
+           "-fno-omit-frame-pointer"]
+    if sanitizers:
+        cmd += ["-fsanitize=address,undefined", "-fno-sanitize-recover=all"]
+    cmd += ["validation/harness/autoepap_core_host.c", "-Wl,--gc-sections",
+            "-lm", "-o", str(target)]
+    build = command(cmd)
+    build["name"] = "AutoEPAP core (compile)"
+    result = [build]
+    if build["passed"]:
+        env = os.environ.copy()
+        if sanitizers:
+            env["ASAN_OPTIONS"] = "detect_leaks=1:halt_on_error=1"
+            env["UBSAN_OPTIONS"] = "halt_on_error=1:print_stacktrace=1"
+        test = command([str(target)], env=env)
+        test["name"] = "AutoEPAP core (execute)"
+        result.append(test)
+    return result
+
 def git_sha() -> str:
     result = command(["git", "rev-parse", "HEAD"])
     return result["stdout"].strip() if result["passed"] else "unknown"
@@ -117,6 +141,7 @@ def main() -> int:
 
     commands = native_test(build, False, args.sanitizers)
     commands += native_test(build, True, args.sanitizers)
+    commands += autoepap_kernel_test(build, args.sanitizers)
     unit = command([sys.executable, "-m", "unittest", "discover", "-s",
                     "validation/tests", "-p", "test_*.py", "-v"])
     unit["name"] = "Python offline audit and synthetic-scenario unit tests"
@@ -130,6 +155,12 @@ def main() -> int:
 
     try:
         findings = audit()
+        for entry in commands:
+            if "OBSERVATION|AUTOEPAP-NONFINITE-TARGET|NONFINITE" in entry["stdout"]:
+                findings.append({"id": "AB-AUD-11", "severity": "HIGH",
+                                 "classification": "NATIVE_FAULT_INJECTION",
+                                 "description": "Injected nonfinite AutoEPAP target propagates to the pressure-slew output; physical reachability unproven",
+                                 "location": "patches/autoepap/core.c:pressure_slew"})
         audit_error = None
     except Exception as exc:
         findings = []

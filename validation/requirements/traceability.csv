@@ -5,7 +5,7 @@ AB-003,AB-AUD-07,source inspection,No independently measured absolute pressure o
 AB-004,ASV-01 to ASV-08; AB-AUD-05,native C + source audit,No clinical confirmation of appropriate backup behaviour
 AB-005,AB-AUD-09,source inspection,Native iVAPS off-state differential test not implemented
 AB-006,AB-AUD-06; AB-AUD-08,source inspection,Allocator failure injection not implemented
-AB-007,none,future fuzz,Nonfinite sensor propagation not tested
+AB-007,AutoEPAP nonfinite fault probe,native C kernel,Target NaN propagates but sensor reachability and system pressure handling unverified
 AB-008,none,future integration,Mode and session reset tests not implemented
 AB-009,none,future bench,Control and physical pressure dynamics not measured
 AB-010,none,future EDF verification,Unmodified vs patched SD card export not measured
