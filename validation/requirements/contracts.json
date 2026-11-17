@@ -1,0 +1,15 @@
+{
+  "scope": "Offline research only — these are independent proposed requirements, not validated medical-device claims.",
+  "contracts": [
+    {"id": "AB-001", "claim": "Stock AutoSet pressure control and classification unaffected by inactive add-ons", "status": "UNVERIFIED", "evidence_needed": "Matched original/modified bench trace"},
+    {"id": "AB-002", "claim": "Disabling Custom VAuto produces stock VAuto control outputs", "status": "UNVERIFIED", "evidence_needed": "Native wrapper plus full stock-reference inputs"},
+    {"id": "AB-003", "claim": "Custom support respects the independently defined selected-Max-IPAP ceiling", "status": "DESIGN_CONFLICT", "evidence_needed": "Independent pressure contract and hardware measurement"},
+    {"id": "AB-004", "claim": "Backup breaths cannot be inadvertently disabled by patch defaults", "status": "DESIGN_CONFLICT", "evidence_needed": "Clinical policy and configuration audit"},
+    {"id": "AB-005", "claim": "AutoEPAP Off has identical effects to native iVAPS behaviour", "status": "UNVERIFIED", "evidence_needed": "Stock timing and ventilation-estimator differential trace"},
+    {"id": "AB-006", "claim": "All injected worker allocations handle low-memory conditions without crash", "status": "CODE_INDICATOR", "evidence_needed": "Native fault injection and firmware scheduler observation"},
+    {"id": "AB-007", "claim": "Malformed or non-finite sensor values cannot produce non-finite pressure commands", "status": "UNVERIFIED", "evidence_needed": "Property and fault-injection tests"},
+    {"id": "AB-008", "claim": "Controller state resets across mode changes and aborts", "status": "UNVERIFIED", "evidence_needed": "Native multicomponent integration simulation"},
+    {"id": "AB-009", "claim": "Pressure transitions and fall/rise timing stay within independently defined limits", "status": "UNVERIFIED", "evidence_needed": "Reference timing and HIL pressure transducer"},
+    {"id": "AB-010", "claim": "EDF channels and reported mode match actual delivered therapy", "status": "UNVERIFIED", "evidence_needed": "Original/modified SD card recordings"}
+  ]
+}

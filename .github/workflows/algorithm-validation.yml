@@ -1,0 +1,27 @@
+name: Offline algorithm validation
+on:
+  push:
+    branches:
+      - test/algorithm-validation
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  host-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Native host tests, Python tests and risk report
+        run: python3 validation/run.py --sanitizers
+      - name: Publish validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: airbreak-offline-validation
+          path: validation/reports/
+          if-no-files-found: warn
