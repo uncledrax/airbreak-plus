@@ -16,8 +16,27 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Native host tests, Python tests and risk report
+      - name: Native ASV, AutoEPAP and Custom VAuto tests
         run: python3 validation/run.py --sanitizers
+      - name: Summarize regression and pressure-contract results
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          path = Path('validation/reports/report.json')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              if not path.exists():
+                  summary.write('## Validation evidence unavailable\n\nNo report was produced.\n')
+              else:
+                  report = json.loads(path.read_text())
+                  pressure = report['vauto_pressure_contract']
+                  summary.write('## Offline algorithm validation\n\n')
+                  summary.write(f"Regression commands: **{report['regression_status']}**\n\n")
+                  summary.write(f"Proposed selected-Max-IPAP ceiling: **{pressure['status']}**\n\n")
+                  summary.write('Measurement: request entering the stock limiter; delivered pressure is unverified.\n\n')
+                  summary.write(f"Open engineering findings: **{len(report['findings'])}**. See the HTML/JSON and VAuto CSV artifact.\n")
+          PY
       - name: Publish validation evidence
         if: always()
         uses: actions/upload-artifact@v4

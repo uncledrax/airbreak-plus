@@ -1,11 +1,11 @@
 requirement_id,initial_test_or_audit,method,current_evidence_gap
 AB-001,none,differential,Stock firmware baseline and controlled pneumatic measurement
-AB-002,AB-AUD-07,source inspection,Needs actual VAuto native input trace with wrapper off
-AB-003,AB-AUD-07,source inspection,No independently measured absolute pressure output
+AB-002,VAUTO-01 to VAUTO-10,native wrapper boundary,Tested pass-through inputs only; full stock controller and scheduling equivalence unverified
+AB-003,VAUTO-22; VAUTO-23; AB-AUD-07,native boundary trace plus independent CSV comparison,Selected ceiling exceeded at limiter input; final limiter and delivered pressure unverified
 AB-004,ASV-01 to ASV-08; AB-AUD-05,native C + source audit,No clinical confirmation of appropriate backup behaviour
 AB-005,AB-AUD-09,source inspection,Native iVAPS off-state differential test not implemented
-AB-006,AB-AUD-06; AB-AUD-08,source inspection,Allocator failure injection not implemented
-AB-007,AutoEPAP nonfinite fault probe,native C kernel,Target NaN propagates but sensor reachability and system pressure handling unverified
-AB-008,none,future integration,Mode and session reset tests not implemented
+AB-006,VAUTO-02; AB-AUD-06; AB-AUD-08,successful native attachment plus source inspection,Allocator failure injection not implemented
+AB-007,AutoEPAP nonfinite fault probe; VAUTO-18 to VAUTO-20; AB-AUD-12,native C fault injection,Internal VAuto faults fall back to finite original input but original NaN is forwarded; upstream and downstream behavior unverified
+AB-008,VAUTO-04 to VAUTO-11,native controller lifecycle,Selected states reset in fixture; tracker lifecycle and real scheduler unverified
 AB-009,none,future bench,Control and physical pressure dynamics not measured
 AB-010,none,future EDF verification,Unmodified vs patched SD card export not measured
